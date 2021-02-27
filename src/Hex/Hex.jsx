@@ -6,11 +6,11 @@ import { oneOf, arrayOf, number } from "prop-types";
 import * as S from "./styled";
 
 const Hex = ({ hexColor, pos }) => {
-  const { currentHex, selectHex, makeMove } = useGame();
+  const { currentHex, selectHex, makePlayerMove } = useGame();
 
   const handleClick = (hexPos) => {
     if (currentHex) {
-      makeMove({ hexPos, playerColor: playersIndicators.player });
+      makePlayerMove({ hexPos, playerColor: playersIndicators.player });
     } else {
       selectHex({ hexPos });
     }
