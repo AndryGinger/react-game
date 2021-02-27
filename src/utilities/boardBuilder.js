@@ -5,5 +5,13 @@ export default (size) => {
     board.push(new Array(size + i).fill(0));
   }
 
-  return [...board, ...board.slice(0, board.length - 1).reverse()];
+  board = [
+    ...board,
+    ...board.slice(0, board.length - 1).reverse(),
+  ].map((hexRow) => [...hexRow]);
+
+  board[board.length - 1][0] = 1;
+  board[0][size - 1] = 2;
+
+  return board;
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import * as S from "./styled";
 
-const Hex = () => {
-  return <S.Hex />;
+const Hex = ({ hexColor }) => {
+  return <S.Hex hexColor={hexColor} />;
 };
 
 export default Hex;
