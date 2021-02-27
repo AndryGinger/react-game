@@ -7,7 +7,7 @@ export default (size) => {
 
   board = [
     ...board,
-    ...board.slice(0, board.length - 1).reverse(),
+    ...board.slice(0, board.length - 1).reverse()
   ].map((hexRow) => [...hexRow]);
 
   board[board.length - 1][0] = 1;
