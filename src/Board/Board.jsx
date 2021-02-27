@@ -9,9 +9,8 @@ const Board = ({ boardSize }) => {
     <GameProvider boardSize={boardSize}>
       {({ board }) => (
         <S.BoardWrapper>
-          {console.log(board)}
           {board.map((hexes, index) => (
-            <HexRow hexes={hexes} rowIndex={index} key={index} />
+            <HexRow hexes={hexes} rowIndex={index} key={`hex-row-${index}`} />
           ))}
         </S.BoardWrapper>
       )}
