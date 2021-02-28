@@ -1,3 +1,5 @@
+import playersIndicators from "../constants/playersIndicators";
+
 const cellsAroundCoord = [
   { x: -1, y: 0 },
   { x: 1, y: 0 },
@@ -7,7 +9,13 @@ const cellsAroundCoord = [
   { y: -1, x: 0 }
 ];
 
-export const getEmptyCellsAround = ({ x, y, board, withJump = false }) => {
+export const getCellsAround = ({
+  x,
+  y,
+  board,
+  cellValue = 0,
+  withJump = false
+}) => {
   let cellsAround = [];
   let xModificator;
   let neighborX;
@@ -23,14 +31,16 @@ export const getEmptyCellsAround = ({ x, y, board, withJump = false }) => {
         if (withJump) {
           cellsAround = [
             ...cellsAround,
-            ...getEmptyCellsAround({ x: neighborX, y: y + cell.y, board })
+            ...getCellsAround({ x: neighborX, y: y + cell.y, board })
           ];
         }
       }
     }
   });
 
-  cellsAround = cellsAround.filter((cell) => board[cell[0]][cell[1]] === 0);
+  cellsAround = cellsAround.filter(
+    (cell) => board[cell[0]][cell[1]] === cellValue
+  );
 
   return cellsAround;
 };
@@ -43,7 +53,7 @@ export const findAvailableCells = ({ board, playerColor }) => {
       if (board[y][x] === playerColor) {
         availableCells = [
           ...availableCells,
-          ...getEmptyCellsAround({ x, y, board })
+          ...getCellsAround({ x, y, board, cellValue: playersIndicators.none })
         ];
       }
     });

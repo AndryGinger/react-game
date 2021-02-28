@@ -13,17 +13,17 @@ const Hex = ({ hexColor, pos }) => {
     playerAvailableCells
   } = useGame();
 
-  const handleClick = (hexPos) => {
-    if (currentHex) {
-      makePlayerMove({ hexPos, playerColor: playersIndicators.player });
-    } else {
-      selectHex({ hexPos });
-    }
-  };
-
   const available = playerAvailableCells.some(
     (cell) => cell[0] === pos[0] && cell[1] === pos[1]
   );
+
+  const handleClick = () => {
+    if (currentHex && available) {
+      makePlayerMove({ hexPos: pos, playerColor: playersIndicators.player });
+    } else {
+      selectHex({ hexPos: pos });
+    }
+  };
 
   return (
     <S.Hex
@@ -32,7 +32,7 @@ const Hex = ({ hexColor, pos }) => {
       }
       available={available}
       hexColor={hexColor}
-      onClick={() => handleClick(pos)}
+      onClick={handleClick}
     />
   );
 };

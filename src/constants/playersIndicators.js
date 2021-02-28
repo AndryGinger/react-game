@@ -1,4 +1,5 @@
 const playersIndicators = {
+  none: 0,
   player: 1,
   enemy: 2
 };
