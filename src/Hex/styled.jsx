@@ -58,6 +58,14 @@ export const Hex = styled.div`
     }
   `};
 
+  ${({ available }) =>
+    available &&
+    `
+    :before {
+      background: #8fe88e;
+    }
+  `};
+
   ${({ hexColor }) =>
     hexColor === 1 &&
     `
@@ -71,14 +79,6 @@ export const Hex = styled.div`
     `
     :before {
       background-color: blue;
-    }
-  `};
-
-  ${({ available }) =>
-    available &&
-    `
-    :before {
-      background: #8fe88e;
     }
   `};
 `;
