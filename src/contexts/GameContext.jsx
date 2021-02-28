@@ -43,6 +43,17 @@ export const GameProvider = ({ children, boardSize }) => {
           : playersIndicators.enemy
     });
 
+    if (
+      currentHex &&
+      playerColor === playersIndicators.player &&
+      (currentHex[0] - 2 === hexPos[0] ||
+        currentHex[0] + 2 === hexPos[0] ||
+        currentHex[1] - 2 === hexPos[1] ||
+        currentHex[1] + 2 === hexPos[1])
+    ) {
+      newBoard[currentHex[0]][currentHex[1]] = playersIndicators.none;
+    }
+
     newBoard[hexPos[0]][hexPos[1]] = playerColor;
     enemyCellsAround.forEach(
       (cell) => (newBoard[cell[0]][cell[1]] = playerColor)
@@ -52,15 +63,13 @@ export const GameProvider = ({ children, boardSize }) => {
   };
 
   const enemyTurn = () => {
-    setTimeout(() => {
-      const availableCells = findAvailableCells({
-        board,
-        playerColor: playersIndicators.enemy
-      });
-      const newEnemyCell = _.sample(availableCells);
+    const availableCells = findAvailableCells({
+      board,
+      playerColor: playersIndicators.enemy
+    });
+    const newEnemyCell = _.sample(availableCells);
 
-      makeMove({ hexPos: newEnemyCell, playerColor: playersIndicators.enemy });
-    }, 1000);
+    makeMove({ hexPos: newEnemyCell, playerColor: playersIndicators.enemy });
   };
 
   const makePlayerMove = ({ hexPos, playerColor }) => {
