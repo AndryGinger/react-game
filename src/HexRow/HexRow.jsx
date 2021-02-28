@@ -6,7 +6,7 @@ const HexRow = ({ hexes, rowIndex }) => {
   return (
     <S.HexRow>
       {hexes.map((hex, index) => (
-        <Hex hexColor={hex} pos={[rowIndex, index]} key={`hex-${index}`} />
+        <Hex hexColor={hex} pos={[rowIndex, index]} key={index} />
       ))}
     </S.HexRow>
   );

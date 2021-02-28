@@ -6,7 +6,12 @@ import { oneOf, arrayOf, number } from "prop-types";
 import * as S from "./styled";
 
 const Hex = ({ hexColor, pos }) => {
-  const { currentHex, selectHex, makePlayerMove } = useGame();
+  const {
+    currentHex,
+    selectHex,
+    makePlayerMove,
+    playerAvailableCells
+  } = useGame();
 
   const handleClick = (hexPos) => {
     if (currentHex) {
@@ -16,11 +21,16 @@ const Hex = ({ hexColor, pos }) => {
     }
   };
 
+  const available = playerAvailableCells.some(
+    (cell) => cell[0] === pos[0] && cell[1] === pos[1]
+  );
+
   return (
     <S.Hex
       selected={
         currentHex && currentHex[0] === pos[0] && currentHex[1] === pos[1]
       }
+      available={available}
       hexColor={hexColor}
       onClick={() => handleClick(pos)}
     />
