@@ -1,4 +1,5 @@
 import playersIndicators from "../constants/playersIndicators";
+import _ from "lodash";
 
 const cellsAroundCoord = [
   { x: -1, y: 0 },
@@ -45,19 +46,36 @@ export const getCellsAround = ({
   return cellsAround;
 };
 
-export const findAvailableCells = ({ board, playerColor }) => {
-  let availableCells = [];
+export const detectEnemyMove = ({ board }) => {
+  let cells = [];
+  let origin;
 
   board.forEach((_, y) => {
     board.forEach((_, x) => {
-      if (board[y][x] === playerColor) {
-        availableCells = [
-          ...availableCells,
-          ...getCellsAround({ x, y, board, cellValue: playersIndicators.none })
-        ];
+      if (board[y][x] === playersIndicators.enemy) {
+        cells.push([y, x]);
       }
     });
   });
 
-  return availableCells;
+  cells = _.shuffle(cells);
+
+  cells.some((cell) => {
+    let cellsAround = getCellsAround({
+      x: cell[1],
+      y: cell[0],
+      board,
+      cellValue: playersIndicators.none,
+      withJump: true
+    });
+
+    if (cellsAround.length) {
+      origin = cell;
+      cells = cellsAround;
+    }
+
+    return origin !== undefined;
+  });
+
+  return { origin, availableCells: cells };
 };
