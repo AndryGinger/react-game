@@ -1,40 +1,49 @@
-import playersIndicators from "../constants/playersIndicators";
-
 const cellsAroundCoord = [
-  { x: 0, y: -1 },
-  { x: 0, y: 1 },
   { x: -1, y: 0 },
-  { x: -1, y: 1 },
   { x: 1, y: 0 },
-  { x: 1, y: 1 }
+  { y: 1 },
+  { y: 1, x: 0 },
+  { y: -1 },
+  { y: -1, x: 0 }
 ];
 
-const getEmptyCellsAround = (enemyCell, board) => {
+export const getEmptyCellsAround = ({ x, y, board, withJump = false }) => {
   let cellsAround = [];
-
-  console.log(enemyCell);
+  let xModificator;
+  let neighborX;
 
   cellsAroundCoord.forEach((cell) => {
-    if (
-      board[enemyCell[0] + cell.x] &&
-      board[enemyCell[0] + cell.x][enemyCell[1] + cell.y] === 0
-    ) {
-      cellsAround.push([enemyCell[0] + cell.x, enemyCell[1] + cell.y]);
+    if (board[y + cell.y]) {
+      xModificator = board[y + cell.y]?.length - board[y]?.length;
+      neighborX = x + (cell.x === 0 || cell.x ? cell.x : xModificator);
+
+      if (board[y + cell.y][neighborX] >= 0) {
+        cellsAround.push([y + cell.y, neighborX]);
+
+        if (withJump) {
+          cellsAround = [
+            ...cellsAround,
+            ...getEmptyCellsAround({ x: neighborX, y: y + cell.y, board })
+          ];
+        }
+      }
     }
   });
+
+  cellsAround = cellsAround.filter((cell) => board[cell[0]][cell[1]] === 0);
 
   return cellsAround;
 };
 
-export const findAvailableCells = (board) => {
+export const findAvailableCells = ({ board, playerColor }) => {
   let availableCells = [];
 
-  board.forEach((_, x) => {
-    board.forEach((_, y) => {
-      if (board[x][y] === playersIndicators.enemy) {
+  board.forEach((_, y) => {
+    board.forEach((_, x) => {
+      if (board[y][x] === playerColor) {
         availableCells = [
           ...availableCells,
-          ...getEmptyCellsAround([x, y], board)
+          ...getEmptyCellsAround({ x, y, board })
         ];
       }
     });

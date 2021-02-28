@@ -10,7 +10,7 @@ const Board = ({ boardSize }) => {
       {({ board }) => (
         <S.BoardWrapper>
           {board.map((hexes, index) => (
-            <HexRow hexes={hexes} rowIndex={index} key={`hex-row-${index}`} />
+            <HexRow hexes={hexes} rowIndex={index} key={index} />
           ))}
         </S.BoardWrapper>
       )}

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import boardBuilder from "../utilities/boardBuilder";
-import { findAvailableCells } from "../utilities/enemyAI";
+import { findAvailableCells, getEmptyCellsAround } from "../utilities/enemyAI";
 import playersIndicators from "../constants/playersIndicators";
 import _ from "lodash";
 import { number } from "prop-types";
@@ -14,6 +14,7 @@ export const useGame = () => {
 export const GameProvider = ({ children, boardSize }) => {
   const [board, updateBoard] = useState(boardBuilder(boardSize));
   const [currentHex, updateCurrentHex] = useState(null);
+  const [playerAvailableCells, updatePlayerAvailableCells] = useState([]);
 
   const selectHex = ({ hexPos }) => {
     if (board[hexPos[0]][hexPos[1]] !== 1) {
@@ -21,6 +22,9 @@ export const GameProvider = ({ children, boardSize }) => {
     }
 
     updateCurrentHex(hexPos);
+    updatePlayerAvailableCells(
+      getEmptyCellsAround({ x: hexPos[1], y: hexPos[0], board, withJump: true })
+    );
   };
 
   const makeMove = ({ hexPos, playerColor }) => {
@@ -32,7 +36,10 @@ export const GameProvider = ({ children, boardSize }) => {
   };
 
   const enemyTurn = () => {
-    const availableCells = findAvailableCells(board);
+    const availableCells = findAvailableCells({
+      board,
+      playerColor: playersIndicators.enemy
+    });
     const newEnemyCell = _.sample(availableCells);
 
     makeMove({ hexPos: newEnemyCell, playerColor: playersIndicators.enemy });
@@ -45,6 +52,7 @@ export const GameProvider = ({ children, boardSize }) => {
 
     makeMove({ hexPos, playerColor });
     updateCurrentHex(null);
+    updatePlayerAvailableCells([]);
     enemyTurn();
   };
 
@@ -55,7 +63,8 @@ export const GameProvider = ({ children, boardSize }) => {
         updateCurrentHex,
         updateBoard,
         selectHex,
-        makePlayerMove
+        makePlayerMove,
+        playerAvailableCells
       }}
     >
       {children({ board })}
