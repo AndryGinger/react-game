@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import boardBuilder from "../utilities/boardBuilder";
-import { findAvailableCells, getCellsAround } from "../utilities/boardManager";
+import { detectEnemyMove, getCellsAround } from "../utilities/boardManager";
 import playersIndicators from "../constants/playersIndicators";
 import _ from "lodash";
 import { number } from "prop-types";
@@ -31,7 +31,7 @@ export const GameProvider = ({ children, boardSize }) => {
     );
   };
 
-  const makeMove = ({ hexPos, playerColor }) => {
+  const makeMove = ({ hexPos, playerColor, origin }) => {
     const newBoard = [...board];
     const enemyCellsAround = getCellsAround({
       x: hexPos[1],
@@ -43,15 +43,18 @@ export const GameProvider = ({ children, boardSize }) => {
           : playersIndicators.enemy
     });
 
-    if (
-      currentHex &&
-      playerColor === playersIndicators.player &&
-      (currentHex[0] - 2 === hexPos[0] ||
-        currentHex[0] + 2 === hexPos[0] ||
-        currentHex[1] - 2 === hexPos[1] ||
-        currentHex[1] + 2 === hexPos[1])
-    ) {
-      newBoard[currentHex[0]][currentHex[1]] = playersIndicators.none;
+    const cellsAround = getCellsAround({
+      x: origin[1],
+      y: origin[0],
+      board,
+      cellValue: playersIndicators.none
+    });
+    const isCloseStep = cellsAround.some(
+      (cell) => cell[0] === hexPos[0] && cell[1] === hexPos[1]
+    );
+
+    if (!isCloseStep) {
+      newBoard[origin[0]][origin[1]] = playersIndicators.none;
     }
 
     newBoard[hexPos[0]][hexPos[1]] = playerColor;
@@ -63,19 +66,22 @@ export const GameProvider = ({ children, boardSize }) => {
   };
 
   const enemyTurn = () => {
-    const availableCells = findAvailableCells({
-      board,
-      playerColor: playersIndicators.enemy
-    });
-    const newEnemyCell = _.sample(availableCells);
+    setTimeout(() => {
+      const { origin, availableCells } = detectEnemyMove({ board });
+      const newEnemyCell = _.sample(availableCells);
 
-    makeMove({ hexPos: newEnemyCell, playerColor: playersIndicators.enemy });
+      makeMove({
+        hexPos: newEnemyCell,
+        playerColor: playersIndicators.enemy,
+        origin
+      });
+    }, 1000);
   };
 
   const makePlayerMove = ({ hexPos, playerColor }) => {
     if (board[hexPos[0]][hexPos[1]] !== 0) return;
 
-    makeMove({ hexPos, playerColor });
+    makeMove({ hexPos, playerColor, origin: currentHex });
     updateCurrentHex(null);
     updatePlayerAvailableCells([]);
     enemyTurn();
