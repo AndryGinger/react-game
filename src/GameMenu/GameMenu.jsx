@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import * as S from "./styled";
+import React from "react";
 import { number, func } from "prop-types";
 
-const GameMenu = ({ boardSize, updateBoardSize, updateIsGameStarted }) => {
-  const [isOpen, updateIsOpen] = useState(true);
-  const onPlay = () => {
-    updateIsOpen(false);
-    updateIsGameStarted(true);
-  };
+import * as S from "./styled";
 
+const GameMenu = ({
+  boardSize,
+  updateBoardSize,
+  isGameStarted,
+  updateIsGameStarted
+}) => {
   return (
-    <S.GameMenu isOpen={isOpen}>
+    <S.GameMenu isOpen={!isGameStarted}>
       <S.MenuWrapper>
         <S.BoardSize>
           <S.InputLabel htmlFor="board-size">
@@ -27,7 +27,9 @@ const GameMenu = ({ boardSize, updateBoardSize, updateIsGameStarted }) => {
           ></S.Input>
           <S.RangeInputIndicator>7</S.RangeInputIndicator>
         </S.BoardSize>
-        <S.PlayButton onClick={onPlay}>Play</S.PlayButton>
+        <S.PlayButton onClick={() => updateIsGameStarted(true)}>
+          Play
+        </S.PlayButton>
       </S.MenuWrapper>
     </S.GameMenu>
   );

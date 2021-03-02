@@ -4,7 +4,6 @@ import Modal from "react-modal";
 export const GameMenu = styled(Modal)`
   position: absolute;
   color: white;
-
   top: 20%;
   left: 50%;
   transform: translate(-50%, -20%);
