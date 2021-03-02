@@ -37,14 +37,16 @@ export const GameProvider = ({ children, boardSize }) => {
   const checkIfGameIsFinished = (gameBoard, playerColor) => {
     const anySteps = gameBoard.some((row, y) => {
       return row.some((column, x) => {
-        const cell = getCellsAround({
-          x,
-          y,
-          board: gameBoard,
-          cellValue: playerColor
-        });
+        if (gameBoard[y][x] === playerColor) {
+          const cell = getCellsAround({
+            x,
+            y,
+            board: gameBoard,
+            cellValue: playersIndicators.none
+          });
 
-        return cell.length > 0;
+          return cell.length > 0;
+        }
       });
     });
 
