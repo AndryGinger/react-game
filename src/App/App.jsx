@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import Board from "../Board";
+import GameMenu from "../GameMenu";
+
+import * as S from "./styled";
 
 export default function App() {
   const [boardSize, updateBoardSize] = useState(3);
+  const [isGameStarted, updateIsGameStarted] = useState(false);
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Hexagon</h1>
-      <input
-        type="number"
-        onChange={(event) => updateBoardSize(parseInt(event.target.value))}
-        min="3"
-        max="7"
-        value={boardSize}
-      />
-      <Board boardSize={boardSize} />
+      <S.GlobalStyle />
+      <S.GameWrapper>
+        <GameMenu
+          updateIsGameStarted={updateIsGameStarted}
+          boardSize={boardSize}
+          updateBoardSize={updateBoardSize}
+        />
+        {isGameStarted && <Board boardSize={boardSize} />}
+      </S.GameWrapper>
     </>
   );
 }
