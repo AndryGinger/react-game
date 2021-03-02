@@ -12,6 +12,7 @@ export const useGame = () => {
 };
 
 export const GameProvider = ({ children, boardSize }) => {
+  const [isEnemyTurn, updateIsEnemyTurn] = useState(false);
   const [isGameOver, updateIsGameOver] = useState(false);
   const [board, updateBoard] = useState(boardBuilder(boardSize));
   const [currentHex, updateCurrentHex] = useState(null);
@@ -104,6 +105,7 @@ export const GameProvider = ({ children, boardSize }) => {
         playerColor: playersIndicators.enemy,
         origin
       });
+      updateIsEnemyTurn(false);
     }, 1000);
   };
 
@@ -112,6 +114,7 @@ export const GameProvider = ({ children, boardSize }) => {
 
     const stopGame = makeMove({ hexPos, playerColor, origin: currentHex });
 
+    updateIsEnemyTurn(true);
     updateCurrentHex(null);
     updatePlayerAvailableCells([]);
 
@@ -129,7 +132,8 @@ export const GameProvider = ({ children, boardSize }) => {
         selectHex,
         makePlayerMove,
         playerAvailableCells,
-        isGameOver
+        isGameOver,
+        isEnemyTurn
       }}
     >
       {children({ board })}
