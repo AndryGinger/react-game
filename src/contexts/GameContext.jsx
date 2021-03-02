@@ -12,6 +12,7 @@ export const useGame = () => {
 };
 
 export const GameProvider = ({ children, boardSize }) => {
+  const [playersCells, updatePlayerCells] = useState({});
   const [isEnemyTurn, updateIsEnemyTurn] = useState(false);
   const [isGameOver, updateIsGameOver] = useState(false);
   const [board, updateBoard] = useState(boardBuilder(boardSize));
@@ -35,7 +36,7 @@ export const GameProvider = ({ children, boardSize }) => {
 
   const checkIfGameIsFinished = (gameBoard, playerColor) => {
     const anySteps = gameBoard.some((row, y) => {
-      return gameBoard.some((column, x) => {
+      return row.some((column, x) => {
         const cell = getCellsAround({
           x,
           y,
@@ -48,6 +49,24 @@ export const GameProvider = ({ children, boardSize }) => {
     });
 
     if (!anySteps) {
+      let enemyCells = 0;
+      let playerCells = 0;
+
+      gameBoard.forEach((row) => {
+        row.forEach((el) => {
+          if (el === playersIndicators.player) {
+            playerCells++;
+          } else if (el === playersIndicators.enemy) {
+            enemyCells++;
+          }
+        });
+      });
+
+      updatePlayerCells({
+        player: playerCells,
+        enemy: enemyCells
+      });
+
       updateIsGameOver(true);
       return true;
     }
@@ -134,7 +153,8 @@ export const GameProvider = ({ children, boardSize }) => {
         playerAvailableCells,
         isGameOver,
         isEnemyTurn,
-        updateIsGameOver
+        updateIsGameOver,
+        playersCells
       }}
     >
       {children({ board })}

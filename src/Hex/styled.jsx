@@ -70,7 +70,7 @@ export const Hex = styled.div`
     hexColor === 1 &&
     `
     :before {
-      background-color: red;
+      background-color: #ff0000;
     }
   `};
 
@@ -78,7 +78,7 @@ export const Hex = styled.div`
     hexColor === 2 &&
     `
     :before {
-      background-color: blue;
+      background-color: #0028ff;
     }
   `};
 `;
