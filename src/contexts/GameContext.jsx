@@ -133,7 +133,8 @@ export const GameProvider = ({ children, boardSize }) => {
         makePlayerMove,
         playerAvailableCells,
         isGameOver,
-        isEnemyTurn
+        isEnemyTurn,
+        updateIsGameOver
       }}
     >
       {children({ board })}
