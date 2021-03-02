@@ -54,7 +54,7 @@ export const detectEnemyMove = ({ board }) => {
     originsWithAttack = {};
 
   board.forEach((row, y) => {
-    board.forEach((el, x) => {
+    row.forEach((el, x) => {
       if (board[y][x] === playersIndicators.enemy) {
         const cellsAround = getCellsAround({
           x,
