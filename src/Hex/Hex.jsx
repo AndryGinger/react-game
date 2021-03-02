@@ -10,7 +10,8 @@ const Hex = ({ hexColor, pos }) => {
     currentHex,
     selectHex,
     makePlayerMove,
-    playerAvailableCells
+    playerAvailableCells,
+    isGameOver
   } = useGame();
 
   const available = playerAvailableCells.some(
@@ -32,7 +33,7 @@ const Hex = ({ hexColor, pos }) => {
       }
       available={available}
       hexColor={hexColor}
-      onClick={handleClick}
+      onClick={isGameOver ? () => {} : handleClick}
     />
   );
 };

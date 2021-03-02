@@ -12,6 +12,7 @@ export const useGame = () => {
 };
 
 export const GameProvider = ({ children, boardSize }) => {
+  const [isGameOver, updateIsGameOver] = useState(false);
   const [board, updateBoard] = useState(boardBuilder(boardSize));
   const [currentHex, updateCurrentHex] = useState(null);
   const [playerAvailableCells, updatePlayerAvailableCells] = useState([]);
@@ -29,6 +30,28 @@ export const GameProvider = ({ children, boardSize }) => {
         withJump: true
       })
     );
+  };
+
+  const checkIfGameIsFinished = (gameBoard, playerColor) => {
+    const anySteps = gameBoard.some((row, y) => {
+      return gameBoard.some((column, x) => {
+        const cell = getCellsAround({
+          x,
+          y,
+          board: gameBoard,
+          cellValue: playerColor
+        });
+
+        return cell.length > 0;
+      });
+    });
+
+    if (!anySteps) {
+      updateIsGameOver(true);
+      return true;
+    }
+
+    return false;
   };
 
   const makeMove = ({ hexPos, playerColor, origin }) => {
@@ -63,6 +86,12 @@ export const GameProvider = ({ children, boardSize }) => {
     );
 
     updateBoard(newBoard);
+    return checkIfGameIsFinished(
+      newBoard,
+      playerColor === playersIndicators.enemy
+        ? playersIndicators.player
+        : playersIndicators.enemy
+    );
   };
 
   const enemyTurn = () => {
@@ -81,10 +110,14 @@ export const GameProvider = ({ children, boardSize }) => {
   const makePlayerMove = ({ hexPos, playerColor }) => {
     if (board[hexPos[0]][hexPos[1]] !== 0) return;
 
-    makeMove({ hexPos, playerColor, origin: currentHex });
+    const stopGame = makeMove({ hexPos, playerColor, origin: currentHex });
+
     updateCurrentHex(null);
     updatePlayerAvailableCells([]);
-    enemyTurn();
+
+    if (!stopGame) {
+      enemyTurn();
+    }
   };
 
   return (
@@ -95,7 +128,8 @@ export const GameProvider = ({ children, boardSize }) => {
         updateBoard,
         selectHex,
         makePlayerMove,
-        playerAvailableCells
+        playerAvailableCells,
+        isGameOver
       }}
     >
       {children({ board })}
