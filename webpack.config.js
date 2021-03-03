@@ -6,19 +6,19 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 
 module.exports = {
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js", ".jsx"]
   },
   entry: "./src/index.js",
   output: {
     filename: "main.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist")
   },
   devtool: "inline-source-map",
   devServer: {
     contentBase: path.resolve(__dirname, "dist"),
     port: 9000,
     open: true,
-    hot: true,
+    hot: true
   },
   module: {
     rules: [
@@ -28,23 +28,34 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
+            presets: ["@babel/preset-env", "@babel/preset-react"]
+          }
+        }
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader"
+          }
+        ]
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"]
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        loader: "file-loader",
-      },
-    ],
+        test: /\.(png|svg|jpg|gif|ico)$/,
+        loader: "file-loader"
+      }
+    ]
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html"
+    }),
     new ESLintPlugin(),
-    new MiniCssExtractPlugin(),
-  ],
+    new MiniCssExtractPlugin()
+  ]
 };

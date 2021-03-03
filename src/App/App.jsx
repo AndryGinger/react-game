@@ -45,5 +45,3 @@ export default function App() {
     </>
   );
 }
-
-module.hot.accept();
